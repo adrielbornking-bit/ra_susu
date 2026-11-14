@@ -1,0 +1,3 @@
+"use client";
+import {useEffect,useState} from 'react';
+export function PublicStats(){const [s,set]=useState<{members:number;total:number;occupied:number;slots:number;compliance:number}|null>(null);useEffect(()=>{fetch('/api/public-stats').then(r=>r.ok?r.json():null).then(set).catch(()=>{});},[]);return <section className="public-stats wrap">{[['Community members',s?String(s.members):'—'],['Verified contributions',s?'GH₵'+(s.total/100).toLocaleString('en-GH'):'—'],['Slot occupancy',s?s.occupied+' / '+s.slots:'—'],['Daily compliance',s?s.compliance+'%':'—']].map(([l,v])=><div key={l}><strong>{v}</strong><span>{l}</span></div>)}</section>}

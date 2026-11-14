@@ -1,0 +1,5 @@
+"use client";
+import {useActionState} from 'react';import {Button} from '@/components/ui/button';import type {ActionState} from '@/app/actions';
+export function ActionForm({action,children,label='Save changes',className='',variant='default'}:{action:(s:ActionState,f:FormData)=>Promise<ActionState>;children:React.ReactNode;label?:string;className?:string;variant?:'default'|'outline'|'danger'}){const [s,submit,pending]=useActionState(action,{ok:false,message:''});return <form action={submit} className={'action-form '+className}>{children}<Button variant={variant} disabled={pending}>{pending?'Please wait…':label}</Button>{s.message&&<div role="status" className={s.ok?'form-message success':'form-message error'}>{s.message}{s.secret&&<code className="secret">{s.secret}</code>}</div>}</form>}
+export function Field({label,name,type='text',...props}:{label:string;name:string;type?:string}&React.InputHTMLAttributes<HTMLInputElement>){return <label className="field"><span>{label}</span><input name={name} type={type} {...props}/></label>}
+export function Hidden({name,value}:{name:string;value:string}){return <input type="hidden" name={name} value={value}/>}

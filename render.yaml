@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: ra-susu-ltd
+    runtime: node
+    plan: starter
+    buildCommand: npm ci --include=dev && npm run build
+    preDeployCommand: npm run db:migrate
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: AUTH_URL
+        sync: false
+      - key: AUTH_TRUST_HOST
+        value: "true"
+      - key: APP_URL
+        sync: false
+      - key: ADMIN_PHONE
+        sync: false
+      - key: ADMIN_EMAIL
+        value: admin@ransusu.com
+      - key: CRON_SECRET
+        sync: false
+  - type: cron
+    name: ra-susu-reminders
+    runtime: node
+    schedule: "*/5 * * * *"
+    buildCommand: npm ci --include=dev
+    startCommand: node scripts/reminders.mjs
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: APP_URL
+        sync: false
+      - key: CRON_SECRET
+        sync: false
